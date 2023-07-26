@@ -1,43 +1,45 @@
-﻿using ServiceManager;
-using ServiceManager.Model;
+﻿using WebClientProject.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
+using WebClientProject;
 
 namespace TestApplication
 {
     class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-
-            MyServiceManager sm = new MyServiceManager();
+            var webClientService = new WebClientService();
             //login
-            var loginResult = sm.Login(new Login
+            var loginResult = webClientService.Login(new Login
             {
-                UserName = "test",
-                Password = "123"
+                UserName = "UserName",
+                Password = "Password"
             });
-            //send document
-            sm.SendDocument(new Document
+            var token = loginResult.Data; //loginResult.Data is token
+
+            //send a document
+            webClientService.SendDocument(new Document
             {
-                Description = "",
-                DocDate = DateTime.Now,
-                DocDetails = new List<DocumentDetails>{new DocumentDetails
+                Description = "Description",
+                DocumentDate = DateTime.Now,
+                DocumentDetails = new List<DocumentDetails>
                 {
-                    Creditor=12,
-                    Debtor=12,
-                    Description="",
-                    HeadLineCode=12
-                }},
-                FinancialYear = "",
-                ParentDocId = 13,
-                VillageCode = ""
-            },loginResult.Data);//loginResult.Data is token
-            //delete document
-            sm.DeleteDocument("document id", loginResult.Data);
+                    new()
+                    {
+                        Creditor = 1,
+                        Debtor = 2,
+                        Description = "Description",
+                        HeadLineCode = 3
+                    }
+                },
+                FinancialYear = "FinancialYear",
+                ParentDocumentId = 1,
+                Code = string.Empty
+            }, token);
+
+            //delete a document
+            webClientService.DeleteDocument("DocumentId", token);
         }
     }
 }

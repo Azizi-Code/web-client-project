@@ -1,34 +1,29 @@
-﻿using Newtonsoft.Json;
-using ServiceManager.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Net;
-using System.Text;
+using Newtonsoft.Json;
+using WebClientProject.Model;
 
-namespace ServiceManager
+namespace WebClientProject
 {
-    public class MyServiceManager
+    public class WebClientService
     {
-        string _RemoteAddress;
-        public MyServiceManager(string remoteAddress)
+        readonly string _remoteAddress;
+
+        public WebClientService()
         {
-            _RemoteAddress = remoteAddress;
+            //your server ip and port
+            _remoteAddress = "http://123.123.123.123:1234/";
         }
-        public MyServiceManager()
-        {
-            _RemoteAddress = "http://217.218.62.42:8091/";
-        }
+
         public ServiceResult Login(Login login)
         {
-            WebClient client = new WebClient();
+            var webClient = new WebClient();
             try
             {
-
-                string data = JsonConvert.SerializeObject(login);
-                client.Headers.Add(HttpRequestHeader.ContentType, "application/json");
-                var json = client.UploadString(new Uri(_RemoteAddress + "api/auth/PostToken"), "POST", data);
-                ServiceResult result = JsonConvert.DeserializeObject<ServiceResult>(json);
+                var data = JsonConvert.SerializeObject(login);
+                webClient.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+                var json = webClient.UploadString(new Uri(_remoteAddress + "api/auth/PostToken"), "POST", data);
+                var result = JsonConvert.DeserializeObject<ServiceResult>(json);
                 return result;
             }
             catch (Exception ex)
@@ -41,16 +36,18 @@ namespace ServiceManager
                 };
             }
         }
+
         public ServiceResult SendDocument(Document document, string token)
         {
             try
             {
-                WebClient client = new WebClient();
-                string data = JsonConvert.SerializeObject(document);
+                var client = new WebClient();
+                var data = JsonConvert.SerializeObject(document);
                 client.Headers[HttpRequestHeader.Authorization] = "Bearer " + token;
                 client.Headers.Add(HttpRequestHeader.ContentType, "application/json");
-                var json = client.UploadString(new Uri(_RemoteAddress + "api/Financial/PostAddDoc"), "POST", data);
-                ServiceResult result = JsonConvert.DeserializeObject<ServiceResult>(json);
+                //sample api endpoint address
+                var json = client.UploadString(new Uri(_remoteAddress + "api/Financial/PostAddDoc"), "POST", data);
+                var result = JsonConvert.DeserializeObject<ServiceResult>(json);
                 return result;
             }
             catch (Exception ex)
@@ -63,16 +60,18 @@ namespace ServiceManager
                 };
             }
         }
+
         public ServiceResult DeleteDocument(string documentId, string token)
         {
             try
             {
-                WebClient client = new WebClient();
+                var client = new WebClient();
                 client.Headers[HttpRequestHeader.Authorization] = "Bearer " + token;
                 client.Headers.Add(HttpRequestHeader.ContentType, "application/json");
-                //client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                var json = client.UploadString(new Uri(_RemoteAddress + $"api/Financial/PostRemoveDoc?orgdocId={documentId}"), "POST");
-                ServiceResult result = JsonConvert.DeserializeObject<ServiceResult>(json);
+                //sample api endpoint address
+                var json = client.UploadString(
+                    new Uri(_remoteAddress + $"api/Financial/PostRemoveDoc?orgdocId={documentId}"), "POST");
+                var result = JsonConvert.DeserializeObject<ServiceResult>(json);
                 return result;
             }
             catch (Exception ex)

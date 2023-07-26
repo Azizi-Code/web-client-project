@@ -1,2 +1,2 @@
 # WebClientProject
-In this project call and use some web API with WebClient class in .netFramework and serialize and deserialize objects with Newtonsoft JSON package. 
+In this project, we leverage the .NET Framework's WebClient class to seamlessly call and interact with various web APIs. Additionally, we harness the power of the Newtonsoft JSON package to efficiently serialize and deserialize objects, facilitating smooth data handling and communication.
